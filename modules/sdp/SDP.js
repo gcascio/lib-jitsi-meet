@@ -477,7 +477,7 @@ SDP.prototype.rtcpFbToJingle = function(mediaindex, elem, payloadtype) {
 SDP.prototype.rtcpFbFromJingle = function(elem, payloadtype) { // XEP-0293
     let sdp = '';
     const feedbackElementTrrInt
-        = elem.querySelector(':scope >rtcp-fb-trr-int[xmlns="urn:xmpp:jingle:apps:rtp:rtcp-fb:0"]');
+        = elem.querySelector(':scope >rtcp-fb-trr-int[*|xmlns="urn:xmpp:jingle:apps:rtp:rtcp-fb:0"]');
 
     if (feedbackElementTrrInt) {
         sdp += 'a=rtcp-fb:* trr-int ';
@@ -489,7 +489,7 @@ SDP.prototype.rtcpFbFromJingle = function(elem, payloadtype) { // XEP-0293
         sdp += '\r\n';
     }
 
-    const feedbackElements = elem.querySelectorAll(':scope >rtcp-fb[xmlns="urn:xmpp:jingle:apps:rtp:rtcp-fb:0"]');
+    const feedbackElements = elem.querySelectorAll(':scope >rtcp-fb[*|xmlns="urn:xmpp:jingle:apps:rtp:rtcp-fb:0"]');
 
     feedbackElements.forEach(fb => {
         sdp += `a=rtcp-fb:${payloadtype} ${fb.getAttribute('type')}`;
@@ -515,7 +515,7 @@ SDP.prototype.fromJingle = function(jingle) {
     // http://tools.ietf.org/html/draft-ietf-mmusic-sdp-bundle-negotiation-04
     // #section-8
     const groups
-        = jingle.querySelectorAll(':scope >group[xmlns="urn:xmpp:jingle:apps:grouping:0"]');
+        = jingle.querySelectorAll(':scope >group[*|xmlns="urn:xmpp:jingle:apps:grouping:0"]');
 
     if (groups.length) {
         groups.forEach(group => {
@@ -555,9 +555,9 @@ SDP.prototype.fromJingle = function(jingle) {
 // translate a jingle content element into an an SDP media part
 SDP.prototype.jingle2media = function(content) {
     const desc = content.querySelector(':scope >description');
-    const transport = content.querySelector(':scope >transport[xmlns="urn:xmpp:jingle:transports:ice-udp:1"]');
+    const transport = content.querySelector(':scope >transport[*|xmlns="urn:xmpp:jingle:transports:ice-udp:1"]');
     let sdp = '';
-    const sctp = transport.querySelector(':scope >sctpmap[xmlns="urn:xmpp:jingle:transports:dtls-sctp:1"]');
+    const sctp = transport.querySelector(':scope >sctpmap[*|xmlns="urn:xmpp:jingle:transports:dtls-sctp:1"]');
 
     const media = { media: desc.getAttribute('media') };
 
@@ -566,7 +566,7 @@ SDP.prototype.jingle2media = function(content) {
         // estos hack to reject an m-line.
         media.port = '0';
     }
-    if (transport.querySelector(':scope >fingerprint[xmlns="urn:xmpp:jingle:apps:dtls:0"]')) {
+    if (transport.querySelector(':scope >fingerprint[*|xmlns="urn:xmpp:jingle:apps:dtls:0"]')) {
         media.proto = sctp ? 'UDP/DTLS/SCTP' : 'UDP/TLS/RTP/SAVPF';
     } else {
         media.proto = 'UDP/TLS/RTP/SAVPF';
@@ -597,7 +597,7 @@ SDP.prototype.jingle2media = function(content) {
             sdp += `${SDPUtil.buildICEPwd(transport.getAttribute('pwd'))}\r\n`;
         }
         transport
-        .querySelectorAll(':scope >fingerprint[xmlns="urn:xmpp:jingle:apps:dtls:0"]')
+        .querySelectorAll(':scope >fingerprint[*|xmlns="urn:xmpp:jingle:apps:dtls:0"]')
         .forEach(fingerprint => {
             sdp += `a=fingerprint:${fingerprint.getAttribute('hash')}`;
             sdp += ` ${fingerprint.textContent}`;
@@ -678,7 +678,7 @@ SDP.prototype.jingle2media = function(content) {
 
     // xep-0294
     desc
-        .querySelectorAll(':scope >rtp-hdrext[xmlns="urn:xmpp:jingle:apps:rtp:rtp-hdrext:0"]')
+        .querySelectorAll(':scope >rtp-hdrext[*|xmlns="urn:xmpp:jingle:apps:rtp:rtp-hdrext:0"]')
         .forEach(hdrExt => {
             sdp
                 += `a=extmap:${hdrExt.getAttribute('id')} ${
@@ -687,7 +687,7 @@ SDP.prototype.jingle2media = function(content) {
 
     // XEP-0339 handle ssrc-group attributes
     desc
-        .querySelectorAll(':scope >ssrc-group[xmlns="urn:xmpp:jingle:apps:rtp:ssma:0"]')
+        .querySelectorAll(':scope >ssrc-group[*|xmlns="urn:xmpp:jingle:apps:rtp:ssma:0"]')
         .forEach(ssrcGroup => {
             const semantics = ssrcGroup.getAttribute('semantics');
             const ssrcs
@@ -705,7 +705,7 @@ SDP.prototype.jingle2media = function(content) {
     let nonUserSources = '';
 
     desc
-        .querySelectorAll(':scope >source[xmlns="urn:xmpp:jingle:apps:rtp:ssma:0"]')
+        .querySelectorAll(':scope >source[*|xmlns="urn:xmpp:jingle:apps:rtp:ssma:0"]')
         .forEach(source => {
             const ssrc = source.getAttribute('ssrc');
             let isUserSource = true;

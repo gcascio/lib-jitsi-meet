@@ -867,7 +867,7 @@ export default class JingleSessionPC extends JingleSession {
     readSsrcInfo(contents) {
         contents.forEach(content => {
             const ssrcs = content.querySelectorAll(
-                ':scope >description>source[xmlns="urn:xmpp:jingle:apps:rtp:ssma:0"]');
+                ':scope >description>source[*|xmlns="urn:xmpp:jingle:apps:rtp:ssma:0"]');
 
             ssrcs.forEach(ssrcElement => {
                 const ssrc = Number(ssrcElement.getAttribute('ssrc'));
@@ -886,7 +886,7 @@ export default class JingleSessionPC extends JingleSession {
                         }
                     }
                     ssrcElement
-                        .querySelectorAll(':scope >ssrc-info[xmlns="http://jitsi.org/jitmeet"]')
+                        .querySelectorAll(':scope >ssrc-info[*|xmlns="http://jitsi.org/jitmeet"]')
                         .forEach((i3, ssrcInfoElement) => {
                             const owner = ssrcInfoElement.getAttribute('owner');
 
@@ -1103,7 +1103,7 @@ export default class JingleSessionPC extends JingleSession {
 
             const bridgeSession
                 = jingleOfferAnswerIq
-                    .querySelector(':scope >bridge-session[xmlns="http://jitsi.org/protocol/focus"]');
+                    .querySelector(':scope >bridge-session[*|xmlns="http://jitsi.org/protocol/focus"]');
             const bridgeSessionId = bridgeSession?.getAttribute('id') || null;
 
             if (bridgeSessionId !== this._bridgeSessionId) {
@@ -1624,7 +1624,7 @@ export default class JingleSessionPC extends JingleSession {
             let lines = '';
 
             content
-                .querySelectorAll(':scope ssrc-group[xmlns="urn:xmpp:jingle:apps:rtp:ssma:0"]')
+                .querySelectorAll(':scope ssrc-group[*|xmlns="urn:xmpp:jingle:apps:rtp:ssma:0"]')
                 .forEach(element => {
                     // eslint-disable-next-line no-invalid-this
                     const semantics = element.getAttribute('semantics');
@@ -1636,7 +1636,7 @@ export default class JingleSessionPC extends JingleSession {
                 });
 
             // handles both >source and >description>source
-            const tmp = content.querySelectorAll(':scope source[xmlns="urn:xmpp:jingle:apps:rtp:ssma:0"]');
+            const tmp = content.querySelectorAll(':scope source[*|xmlns="urn:xmpp:jingle:apps:rtp:ssma:0"]');
 
             /* eslint-disable no-invalid-this */
             tmp.forEach(element => {
@@ -2116,7 +2116,7 @@ export default class JingleSessionPC extends JingleSession {
             let lines = '';
 
             content
-                .querySelectorAll(':scope ssrc-group[xmlns="urn:xmpp:jingle:apps:rtp:ssma:0"]')
+                .querySelectorAll(':scope ssrc-group[*|xmlns="urn:xmpp:jingle:apps:rtp:ssma:0"]')
                 .forEach(element => {
                     /* eslint-disable no-invalid-this */
                     const semantics = element.getAttribute('semantics');
@@ -2134,7 +2134,7 @@ export default class JingleSessionPC extends JingleSession {
 
             // handles both >source and >description>source versions
             const tmp
-                = content.querySelectorAll(':scope source[xmlns="urn:xmpp:jingle:apps:rtp:ssma:0"]');
+                = content.querySelectorAll(':scope source[*|xmlns="urn:xmpp:jingle:apps:rtp:ssma:0"]');
 
             tmp.forEach(element => {
                 const ssrc = element.getAttribute('ssrc');

@@ -2227,7 +2227,7 @@ JitsiConference.prototype._acceptJvbIncomingCall = function(
 
     const serverRegion
         = jingleOffer
-            .querySelector(':scope >bridge-session[xmlns="http://jitsi.org/protocol/focus"]')
+            .querySelector(':scope >bridge-session[*|xmlns="http://jitsi.org/protocol/focus"]')
             .getAttribute('region');
 
     this.eventEmitter.emit(

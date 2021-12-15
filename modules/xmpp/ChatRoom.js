@@ -389,7 +389,7 @@ export default class ChatRoom extends Listenable {
 
         this.connection.sendIQ(getForm, form => {
             if (!form.querySelector(
-                    ':scope >query>x[xmlns="jabber:x:data"]'
+                    ':scope >query>x[*|xmlns="jabber:x:data"]'
                     + '>field[var="muc#roomconfig_whois"]')) {
                 const errmsg = 'non-anonymous rooms not supported';
 
@@ -956,18 +956,18 @@ export default class ChatRoom extends Listenable {
      */
     onPresenceUnavailable(pres, from) {
         // ignore presence
-        if (pres.querySelector(':scope >ignore[xmlns="http://jitsi.org/jitmeet/"]')) {
+        if (pres.querySelector(':scope >ignore[*|xmlns="http://jitsi.org/jitmeet/"]')) {
             return true;
         }
 
         // room destroyed ?
-        const destroySelect = pres.querySelector(':scope >x[xmlns="http://jabber.org/protocol/muc#user"]>destroy');
+        const destroySelect = pres.querySelector(':scope >x[*|xmlns="http://jabber.org/protocol/muc#user"]>destroy');
 
         if (destroySelect) {
             let reason;
             const reasonSelect
                 = pres.querySelector(
-                    ':scope >x[xmlns="http://jabber.org/protocol/muc#user"]'
+                    ':scope >x[*|xmlns="http://jabber.org/protocol/muc#user"]'
                         + '>destroy>reason');
 
             if (reasonSelect) {
@@ -984,12 +984,12 @@ export default class ChatRoom extends Listenable {
         const isSelfPresence
             = Boolean(pres
                 .querySelector(
-                    ':scope >x[xmlns="http://jabber.org/protocol/muc#user"]>'
+                    ':scope >x[*|xmlns="http://jabber.org/protocol/muc#user"]>'
                         + 'status[code="110"]'));
         const isKick
             = Boolean(pres
                 .querySelector(
-                    ':scope >x[xmlns="http://jabber.org/protocol/muc#user"]'
+                    ':scope >x[*|xmlns="http://jabber.org/protocol/muc#user"]'
                         + '>status[code="307"]'));
         const membersKeys = Object.keys(this.members);
         const isReplaceParticipant = Boolean(pres.querySelector(':scope flip_device'));
@@ -997,7 +997,7 @@ export default class ChatRoom extends Listenable {
         if (isKick) {
             const actorSelect
                 = pres
-                .querySelector(':scope >x[xmlns="http://jabber.org/protocol/muc#user"]>item>actor');
+                .querySelector(':scope >x[*|xmlns="http://jabber.org/protocol/muc#user"]>item>actor');
             let actorNick;
 
             if (actorSelect) {
@@ -1007,7 +1007,7 @@ export default class ChatRoom extends Listenable {
             let reason;
             const reasonSelect
                 = pres.querySelector(
-                ':scope >x[xmlns="http://jabber.org/protocol/muc#user"]'
+                ':scope >x[*|xmlns="http://jabber.org/protocol/muc#user"]'
                 + '>item>reason');
 
             if (reasonSelect) {
@@ -1080,7 +1080,7 @@ export default class ChatRoom extends Listenable {
 
         if (!stamp) {
             // or xep-0091 delay, UTC timestamp
-            stamp = msg.querySelector(':scope >[xmlns="jabber:x:delay"]').getAttribute('stamp');
+            stamp = msg.querySelector(':scope >[*|xmlns="jabber:x:delay"]').getAttribute('stamp');
 
             if (stamp) {
                 // the format is CCYYMMDDThh:mm:ss
@@ -1094,12 +1094,12 @@ export default class ChatRoom extends Listenable {
         if (from === this.roomjid) {
             let invite;
 
-            if (msg.querySelector(':scope >x[xmlns="http://jabber.org/protocol/muc#user"]>status[code="104"]')) {
+            if (msg.querySelector(':scope >x[*|xmlns="http://jabber.org/protocol/muc#user"]>status[code="104"]')) {
                 this.discoRoomInfo();
-            } else if ((invite = msg.querySelector(':scope >x[xmlns="http://jabber.org/protocol/muc#user"]>invite'))
+            } else if ((invite = msg.querySelector(':scope >x[*|xmlns="http://jabber.org/protocol/muc#user"]>invite'))
                         && invite) {
                 const passwordSelect = msg.querySelector(
-                    ':scope >x[xmlns="http://jabber.org/protocol/muc#user"]>password');
+                    ':scope >x[*|xmlns="http://jabber.org/protocol/muc#user"]>password');
                 let password;
 
                 if (passwordSelect) {
@@ -1258,7 +1258,7 @@ export default class ChatRoom extends Listenable {
             res => {
                 if (res
                         .querySelector(
-                            ':scope >query>x[xmlns="jabber:x:data"]'
+                            ':scope >query>x[*|xmlns="jabber:x:data"]'
                                 + '>field[var="muc#roomconfig_roomsecret"]')) {
                     const formsubmit
                         = $iq({
@@ -1368,7 +1368,7 @@ export default class ChatRoom extends Listenable {
             }).c('query', { xmlns: 'http://jabber.org/protocol/muc#owner' }),
             res => {
                 if (res.querySelector(
-                    ':scope >query>x[xmlns="jabber:x:data"]>field[var="muc#roomconfig_membersonly"]')) {
+                    ':scope >query>x[*|xmlns="jabber:x:data"]>field[var="muc#roomconfig_membersonly"]')) {
                     const formToSubmit
                         = $iq({
                             to: this.roomjid,

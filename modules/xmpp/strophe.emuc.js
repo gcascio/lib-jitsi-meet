@@ -106,7 +106,7 @@ export default class MucConnectionPlugin extends ConnectionPluginListenable {
         }
 
         // Parse status.
-        if (pres.querySelector(':scope >x[xmlns="http://jabber.org/protocol/muc#user"]>status[code="201"]')) {
+        if (pres.querySelector(':scope >x[*|xmlns="http://jabber.org/protocol/muc#user"]>status[code="201"]')) {
             room.createNonAnonymousRoom();
         }
 
