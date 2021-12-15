@@ -1,5 +1,4 @@
 import { getLogger } from '@jitsi/logger';
-import $ from 'jquery';
 import { $msg, Strophe } from 'strophe.js';
 import 'strophejs-plugin-disco';
 
@@ -185,11 +184,16 @@ export default class XMPP extends Listenable {
         // they wanted to utilize the connected connection in an unload handler
         // of their own. However, it should be fairly easy for them to do that
         // by registering their unload handler before us.
-        $(window).on(`${this.options.disableBeforeUnloadHandlers ? '' : 'beforeunload '}unload`, ev => {
+        const onUnload = ev => {
             this.disconnect(ev).catch(() => {
                 // ignore errors in order to not brake the unload.
             });
-        });
+        };
+
+        if (!this.options.disableBeforeUnloadHandlers) {
+            window.addEventListener('beforeunload', onUnload);
+        }
+        window.addEventListener('unload', onUnload);
     }
 
     /**
@@ -549,7 +553,10 @@ export default class XMPP extends Listenable {
      */
     _onSystemMessage(msg) {
         // proceed only if the message has any of the expected information
-        if ($(msg).find('>services').length === 0 && $(msg).find('>query').length === 0) {
+        if (
+            msg.querySelectorAll(':scope >services').length === 0
+            && msg.querySelectorAll(':scope >query').length === 0
+        ) {
             return;
         }
 
@@ -989,8 +996,7 @@ export default class XMPP extends Listenable {
             return true;
         }
 
-        const jsonMessage = $(msg).find('>json-message')
-            .text();
+        const jsonMessage = msg.querySelector(':scope >json-message')?.textContent;
         const parsedJson = this.tryParseJSONAndVerify(jsonMessage);
 
         if (!parsedJson) {
