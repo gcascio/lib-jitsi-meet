@@ -50,7 +50,7 @@ function generateSha(identities, features) {
 
 /**
  * Parses the disco-info node and returns the sets of features and identities.
- * @param {String} node The node with results to parse.
+ * @param {Element} node The node with results to parse.
  * @returns {{features: Set<any>, identities: Set<any>}}
  */
 export function parseDiscoInfo(node) {
